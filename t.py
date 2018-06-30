@@ -16,6 +16,11 @@ fo.write("""<!doctype html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script
+       src="https://code.jquery.com/jquery-3.3.1.min.js"
+       integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+       crossorigin="anonymous"></script>
+    <script src="main.js"></script>
 <body>
 """)
 section_suffix = ["編", "章", "節", "款", "目"]
@@ -61,7 +66,7 @@ for row in rows[2:]:
 
     body = row[14]
     #print("{address}\n{jou_address}\n{body}".format(**globals()))
-    fo.write("<p>{address}<br><strong>{jou_address}</strong><br>{body}</p>\n".format(**globals()))
+    fo.write("<p>{address}</p><p><strong>{jou_address}</strong></p><p class='body'>{body}</p>\n".format(**globals()))
 
 
                 
