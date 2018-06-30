@@ -66,7 +66,7 @@ for row in rows[2:]:
 
     body = row[14]
     #print("{address}\n{jou_address}\n{body}".format(**globals()))
-    fo.write("<p>{address}</p><p><strong>{jou_address}</strong></p><p class='body'>{body}</p>\n".format(**globals()))
+    fo.write("<div style='border-style: solid; padding-left: 1em;'><p style='margin: 0'>{address}</p><p><strong>{jou_address}</strong></p><p class='body'>{body}</p></div>\n".format(**globals()))
 
 
                 
