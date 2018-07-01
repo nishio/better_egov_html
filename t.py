@@ -21,8 +21,8 @@ fo.write("""<!doctype html>
        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
        crossorigin="anonymous"></script>
     <script src="main.js"></script>
-<body style="width: 100%">
-
+<body>
+<div style="width: 100%; word-break: break-all">
 <span id='x1'>[x1]</span> <span id='x2'>[x2]</span>
 """)
 section_suffix = ["編", "章", "節", "款", "目"]
