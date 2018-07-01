@@ -21,7 +21,9 @@ fo.write("""<!doctype html>
        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
        crossorigin="anonymous"></script>
     <script src="main.js"></script>
-<body>
+<body style="width: 100%">
+
+<span id='x1'>[x1]</span> <span id='x2'>[x2]</span>
 """)
 section_suffix = ["編", "章", "節", "款", "目"]
 for row in rows[2:]:
@@ -48,29 +50,27 @@ for row in rows[2:]:
     kou = row[12]
     gou = row[13]
     html_id = jou
-    if gou:
-        html_id += ".{}.{}".format(kou, gou)
-    elif kou:
-        html_id += ".{}".format(kou)
-    
 
     jou_address = "<a id='{}' href='#{}'>{}条</a>".format(jou, jou, jou)
 
-    if jou_title:
-        jou_address += " {}".format(jou_title)
     if kou:
-        jou_address += " {}項".format(kou)
+        html_id = "{}.{}".format(jou, kou)
+        jou_address += " <a id='{}' href='#{}'>{}項</a>".format(html_id, html_id, kou)
     if gou:
-        jou_address += " {}号".format(gou)
-    jou_address += "<a id='{}' href='#{}'>#</a>".format(html_id, html_id)
+        html_id = "{}.{}.{}".format(jou, kou, gou)
+        jou_address += " <a id='{}' href='#{}'>{}号</a>".format(html_id, html_id, gou)
 
     body = row[14]
     #print("{address}\n{jou_address}\n{body}".format(**globals()))
-    fo.write("<div style='border-style: solid; padding-left: 1em;'><p style='margin: 0'>{address}</p><p><strong>{jou_address}</strong></p><p class='body'>{body}</p></div>\n".format(**globals()))
+    fo.write("""
+<div style='border-style: solid; padding-left: 1em;'>
+<p style='margin: 0'>{address}<br>
+{jou_title}</p>
+<p class='body'><strong>{jou_address}</strong> {body}</p>
+</div>\n
+""".format(**globals()))
 
-
-                
 fo.close()
-    
+
 
 
