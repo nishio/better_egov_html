@@ -6,11 +6,12 @@ $(function(){
     $("body").css("width", "100%")
   })
 
-
-  $(".body").click((e)=>{
-    e.target.contentEditable = true;
+  $("body").contentEditable = true;
+  $(".copy").click((e)=>{
+    var target = $(e.target).prev();
+    target.css("background-color", "#ffd")
     var range = document.createRange();
-    range.selectNode(e.target);
+    range.selectNode(target[0]);
     window.getSelection().removeAllRanges();
     window.getSelection().addRange(range);
     document.execCommand('copy');

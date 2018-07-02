@@ -66,7 +66,7 @@ for row in rows[2:]:
 <div style='border-style: solid; padding-left: 1em;'>
 <p style='margin: 0'>{address}<br>
 {jou_title}</p>
-<p class='body'><strong>{jou_address}</strong> {body}</p>
+<p><strong>{jou_address}</strong> <span class='body'>{body}</span> <span class='copy'>[copy]</span></p>
 </div>\n
 """.format(**globals()))
 
