@@ -51,7 +51,7 @@ for row in rows[2:]:
     gou = row[13]
     html_id = jou
 
-    jou_address = "<a id='{}' href='#{}'>{}条</a>".format(jou, jou, jou)
+    jou_address = "<a href='#{}'>{}条</a>".format(jou, jou, jou)
 
     if kou:
         html_id = "{}.{}".format(jou, kou)
@@ -63,7 +63,7 @@ for row in rows[2:]:
     body = row[14]
     #print("{address}\n{jou_address}\n{body}".format(**globals()))
     fo.write("""
-<div style='border-style: solid; padding-left: 1em;'>
+    <div style='border-style: solid; padding: 0.5em;' id='{jou}'>
 <p style='margin: 0'>{address}<br>
 {jou_title}</p>
 <p><strong>{jou_address}</strong> <span class='body'>{body}</span> <span class='copy'>[copy]</span></p>
