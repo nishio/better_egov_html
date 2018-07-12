@@ -9,11 +9,16 @@
        crossorigin="anonymous"></script>
     <script src="main.js"></script>
     <link href="style.css" rel="stylesheet">
+    <title>{{ law_title }}</title>
+
 <body>
 <div class="main">
 
-<span id='x1'>[x1]</span> <span id='x2'>[x2]</span>
+  条文を見やすい形にする実験プロジェクトです。詳細はこちら:
+  <a href="https://scrapbox.io/nishio/%E8%A6%8B%E3%82%84%E3%81%99%E3%81%84%E6%9D%A1%E6%96%87">見やすい条文</a>
 
+  <h1 class="header">{{ law_title }}</h1>
+  {% for x in layer1 %}<a href="#c{{ x.html_id }}">{{ x.title }}</a>{{ ", " if not loop.last }}{% endfor %}
 
 {{ main }}
 
