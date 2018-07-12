@@ -9,23 +9,32 @@ TEMPLATE_FILE = "base.html"
 #template = templateEnv.get_template("base.html")
 #outputText = template.render()
 
-
-tree = bs4.BeautifulSoup(open("minpo.xml"), "xml")
+target_file = "tokkyohou.xml"
+tree = bs4.BeautifulSoup(open(target_file), "xml")
 refined_tree = defaultdict(list)
 
-def visitPart(tree):
-    for x in tree.findAll("Part"):
-        refined_tree["root"].append(x)
-        x.html_id = x["Num"]
-        x.title = x.find("PartTitle").text
-        x.parent_id = "root"
-        visitChapter(x)
+def visitPart(root):
+    parts = root.findAll("Part")
+    if parts:
+        for x in parts:
+            refined_tree["root"].append(x)
+            x.html_id = x["Num"]
+            x.title = x.find("PartTitle").text
+            x.parent_id = "root"
+            visitChapter(x)
+    else:
+        root.html_id = "root"
+        visitChapter(root)
 
 def visitChapter(tree):
     for x in tree.findAll("Chapter"):
         refined_tree[tree.html_id].append(x)
         chapter_id = x["Num"]
-        x.html_id = "{}.{}".format(tree.html_id, chapter_id)
+        if tree.html_id == "root":
+            # it's dummy container for laws without parts
+            x.html_id = chapter_id
+        else:
+            x.html_id = "{}.{}".format(tree.html_id, chapter_id)
         x.title = x.find("ChapterTitle").text
         x.parent_id = tree.html_id
         x.parent_group = tree
@@ -75,11 +84,11 @@ def foo(article):
 #foo(tree.find("Article", Num="556"))
 
 header_template = templateEnv.get_template("m_header.html")
-def render_header(item):
+def render_header(container):
     return header_template.render(
-        item=item,
-        siblings=refined_tree[item.parent_id],
-        children=refined_tree[item.html_id])
+        container=container,
+        siblings=refined_tree[container.parent_id],
+        children=refined_tree[container.html_id])
 
 buf = []
 #render_header(refined_tree["3"][0])
@@ -105,6 +114,9 @@ def render_articles(group):
     x = group
     while x.parent_group:
         x = x.parent_group
+        if x.html_id == "root":
+            # it's dummy container for laws without parts
+            break
         address = [x] + address
 
     for a in articles:
@@ -129,8 +141,9 @@ if 1:
     for x in refined_tree["root"]:
         render(x)
 
+    output_file = target_file.replace("xml", "html")
     base_template = templateEnv.get_template("base.html")
-    fo = codecs.open("minpo.html", "w", encoding="utf-8")
+    fo = codecs.open(output_file, "w", encoding="utf-8")
     fo.write(base_template.render(main="\n".join(buf)))
     fo.close()
 
