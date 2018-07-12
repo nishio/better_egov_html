@@ -28,6 +28,7 @@ def visitChapter(tree):
         x.html_id = "{}.{}".format(tree.html_id, chapter_id)
         x.title = x.find("ChapterTitle").text
         x.parent_id = tree.html_id
+        x.parent_group = tree
         visitSection(x)
 
 def visitSection(tree):
@@ -37,6 +38,7 @@ def visitSection(tree):
         x.html_id = "{}.{}".format(tree.html_id, section_id)
         x.title = x.find("SectionTitle").text
         x.parent_id = tree.html_id
+        x.parent_group = tree
         visitSubsection(x)
 
 def visitSubsection(tree):
@@ -46,6 +48,7 @@ def visitSubsection(tree):
         x.html_id = "{}.{}".format(tree.html_id, subsection_id)
         x.title = x.find("SubsectionTitle").text
         x.parent_id = tree.html_id
+        x.parent_group = tree
         visitDivision(x)
 
 def visitDivision(tree):
@@ -55,6 +58,7 @@ def visitDivision(tree):
         x.html_id = "{}.{}".format(tree.html_id, division_id)
         x.title = x.find("DivisionTitle").text
         x.parent_id = tree.html_id
+        x.parent_group = tree
 
 visitPart(tree.MainProvision)
 
@@ -79,15 +83,55 @@ def render_header(item):
 
 buf = []
 #render_header(refined_tree["3"][0])
+
 def render(item):
     buf.append(render_header(item))
-    for x in refined_tree[item.html_id]:
+    children = refined_tree[item.html_id]
+    if children:
+        for x in children:
+            render(x)
+    else:
+        render_articles(item)
+
+
+article_template = templateEnv.get_template("m_article.html")
+
+#target = refined_tree["1"][1]
+#articles = target.findAll("Article")
+
+def render_articles(group):
+    articles = group.findAll("Article")
+    address = group.title
+    x = group
+    while x.parent_group:
+        x = x.parent_group
+        address = "{} {}".format(x.title, address)
+    print(address)
+
+    for a in articles:
+        try:
+            a.caption = a.find("ArticleCaption").text
+        except:
+            pass
+        a.title = a.find("ArticleTitle").text
+        a.html_id = a["Num"]
+        paragraphs = a.findAll("Paragraph")
+        for p in paragraphs:
+            p.paragraph_id = p["Num"]
+            p.html_id = "{}.{}".format(a.html_id, p.paragraph_id)
+            p.sentences = p.find("ParagraphSentence").findAll("Sentence")
+            p.items = p.findAll("Item")
+            for x in p.items:
+                x.html_id = "{}.{}".format(p.html_id, x["Num"])
+        buf.append(article_template.render(article=a, paragraphs=paragraphs, address=address))
+
+
+if 1:
+    for x in refined_tree["root"]:
         render(x)
 
-for x in refined_tree["root"]:
-    render(x)
+    base_template = templateEnv.get_template("base.html")
+    fo = codecs.open("minpo.html", "w", encoding="utf-8")
+    fo.write(base_template.render(main="\n".join(buf)))
+    fo.close()
 
-base_template = templateEnv.get_template("base.html")
-fo = codecs.open("minpo.html", "w", encoding="utf-8")
-fo.write(base_template.render(main="\n".join(buf)))
-fo.close()
