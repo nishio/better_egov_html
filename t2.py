@@ -30,7 +30,11 @@ def visitChapter(tree):
     for x in tree.findAll("Chapter"):
         refined_tree[tree.html_id].append(x)
         chapter_id = x["Num"]
-        x.html_id = "{}.{}".format(tree.html_id, chapter_id)
+        if tree.html_id == "root":
+            # it's dummy container for laws without parts
+            x.html_id = chapter_id
+        else:
+            x.html_id = "{}.{}".format(tree.html_id, chapter_id)
         x.title = x.find("ChapterTitle").text
         x.parent_id = tree.html_id
         x.parent_group = tree
