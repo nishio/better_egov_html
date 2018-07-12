@@ -1,0 +1,16 @@
+<div class="article" id="{{ article.html_id }}">
+{{ address }}<br/>
+{{ article.caption if article.caption }}<br/>
+<a href="#{{ article.html_id }}">{{ article.html_id }}</a> {{ article.title }}<br/>
+
+{% for p in paragraphs %}
+  <a href="#{{ p.html_id }}" id="{{ p.html_id }}">{{ p.html_id }}</a>
+  {% for s in p.sentences %}
+    {{ s.text }}<br/>
+  {% endfor %}
+  {% for x in p.items %}
+    <a href="#{{ x.html_id }}" id="{{ x.html_id }}">{{ x.html_id }}</a> {{ x.text }}<br/>
+  {% endfor %}
+
+{% endfor %}
+</div>
