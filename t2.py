@@ -101,12 +101,11 @@ article_template = templateEnv.get_template("m_article.html")
 
 def render_articles(group):
     articles = group.findAll("Article")
-    address = group.title
+    address = [group]
     x = group
     while x.parent_group:
         x = x.parent_group
-        address = "{} {}".format(x.title, address)
-    print(address)
+        address = [x] + address
 
     for a in articles:
         try:

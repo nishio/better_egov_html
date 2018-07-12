@@ -1,3 +1,30 @@
+div.main {
+    width: 95vw;
+    word-break: break-all
+}
+
 .header h1 {
     margin-bottom: 0;
+}
+
+.address {
+    background-color: #eee;
+    width: 100%
+}
+
+.article-title {
+    font-weight: bold;
+}
+
+.item-title {
+    font-weight: bold;
+}
+
+.paragraph-num {
+    font-weight: bold;
+}
+
+div.article {
+    border: solid;
+    margin-bottom: 1em;
 }
