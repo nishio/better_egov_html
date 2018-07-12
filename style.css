@@ -28,3 +28,7 @@ div.article {
     border: solid;
     margin-bottom: 1em;
 }
+
+.permalink {
+    float: right;
+}

@@ -9,14 +9,14 @@
 <a href="#{{ article.html_id }}">{{ article.html_id }}</a> <span class="article-title">{{ article.title }}</span><br/>
 
 {% for p in paragraphs %}
-  <a href="#{{ p.html_id }}">{{ p.html_id }}</a>
+  <a href="#{{ p.html_id }}" class="permalink">{{ p.html_id }}</a>
   <div id="{{ p.html_id }}">
     <span class="paragraph-num">{{ p.find("ParagraphNum").text }}</span>
   {% for s in p.sentences %}
     {{ s.text }}<br/>
   {% endfor %}
   {% for x in p.items %}
-    <a href="#{{ x.html_id }}">{{ x.html_id }}</a>
+    <a href="#{{ x.html_id }}" class="permalink">{{ x.html_id }}</a>
     <div id="{{ x.html_id }}"><span class="item-title">{{ x.find("ItemTitle").text }}</span> {{ x.find("ItemSentence").text }}</div>
   {% endfor %}
   </div>
