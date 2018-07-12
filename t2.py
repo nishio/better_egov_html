@@ -9,17 +9,22 @@ TEMPLATE_FILE = "base.html"
 #template = templateEnv.get_template("base.html")
 #outputText = template.render()
 
-
-tree = bs4.BeautifulSoup(open("minpo.xml"), "xml")
+target_file = "chosakukenhou.xml"
+tree = bs4.BeautifulSoup(open(target_file), "xml")
 refined_tree = defaultdict(list)
 
 def visitPart(tree):
-    for x in tree.findAll("Part"):
-        refined_tree["root"].append(x)
-        x.html_id = x["Num"]
-        x.title = x.find("PartTitle").text
-        x.parent_id = "root"
-        visitChapter(x)
+    parts = tree.findAll("Part")
+    if parts:
+        for x in parts:
+            refined_tree["root"].append(x)
+            x.html_id = x["Num"]
+            x.title = x.find("PartTitle").text
+            x.parent_id = "root"
+            visitChapter(x)
+    else:
+        tree.html_id = "root"
+        visitChapter(tree)
 
 def visitChapter(tree):
     for x in tree.findAll("Chapter"):
@@ -105,6 +110,9 @@ def render_articles(group):
     x = group
     while x.parent_group:
         x = x.parent_group
+        if x.html_id == "root":
+            # it's dummy container for laws without parts
+            break
         address = [x] + address
 
     for a in articles:
@@ -129,8 +137,9 @@ if 1:
     for x in refined_tree["root"]:
         render(x)
 
+    output_file = target_file.replace("xml", "html")
     base_template = templateEnv.get_template("base.html")
-    fo = codecs.open("minpo.html", "w", encoding="utf-8")
+    fo = codecs.open(output_file, "w", encoding="utf-8")
     fo.write(base_template.render(main="\n".join(buf)))
     fo.close()
 
