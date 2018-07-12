@@ -1,7 +1,7 @@
 <div class="article" id="{{ article.html_id }}">
 <div class="address">
 {% for x in address %}
-<a href="#{{ x.html_id }}">{{ x.title }}</a>{{ ", " if not loop.last }}
+<a href="#c{{ x.html_id }}">{{ x.title }}</a>{{ ", " if not loop.last }}
 {% endfor %}
 </div>
 
