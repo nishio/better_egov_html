@@ -9,12 +9,12 @@ TEMPLATE_FILE = "base.html"
 #template = templateEnv.get_template("base.html")
 #outputText = template.render()
 
-target_file = "chosakukenhou.xml"
+target_file = "tokkyohou.xml"
 tree = bs4.BeautifulSoup(open(target_file), "xml")
 refined_tree = defaultdict(list)
 
-def visitPart(tree):
-    parts = tree.findAll("Part")
+def visitPart(root):
+    parts = root.findAll("Part")
     if parts:
         for x in parts:
             refined_tree["root"].append(x)
@@ -23,8 +23,8 @@ def visitPart(tree):
             x.parent_id = "root"
             visitChapter(x)
     else:
-        tree.html_id = "root"
-        visitChapter(tree)
+        root.html_id = "root"
+        visitChapter(root)
 
 def visitChapter(tree):
     for x in tree.findAll("Chapter"):
@@ -84,11 +84,11 @@ def foo(article):
 #foo(tree.find("Article", Num="556"))
 
 header_template = templateEnv.get_template("m_header.html")
-def render_header(item):
+def render_header(container):
     return header_template.render(
-        item=item,
-        siblings=refined_tree[item.parent_id],
-        children=refined_tree[item.html_id])
+        container=container,
+        siblings=refined_tree[container.parent_id],
+        children=refined_tree[container.html_id])
 
 buf = []
 #render_header(refined_tree["3"][0])
