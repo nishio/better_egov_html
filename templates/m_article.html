@@ -4,22 +4,30 @@
 <a href="#c{{ x.html_id }}">{{ x.title }}</a>{{ ", " if not loop.last }}
 {% endfor %}
 </div>
-<p>
 {{ article.caption if article.caption }}<br/>
-<a href="#{{ article.html_id }}">{{ article.html_id }}</a> <span class="article-title">{{ article.title }}</span><br/>
+<a href="#{{ article.html_id }}" class="permalink">{{ article.html_id }}</a>
+<p>
+<span class="article-title">{{ article.title }}</span>
+</p>
 
 {% for p in paragraphs %}
   <a href="#{{ p.html_id }}" class="permalink">{{ p.html_id }}</a>
   <div id="{{ p.html_id }}">
+    <p>
     <span class="paragraph-num">{{ p.find("ParagraphNum").text }}</span>
-  {% for s in p.sentences %}
-    {{ s.text }}<br/>
-  {% endfor %}
-  {% for x in p.items %}
+    {% for s in p.sentences %}
+    {{ s.text }}
+    {% endfor %}
+    </p>
+
+    {% for x in p.items %}
     <a href="#{{ x.html_id }}" class="permalink">{{ x.html_id }}</a>
-    <div id="{{ x.html_id }}"><span class="item-title">{{ x.find("ItemTitle").text }}</span> {{ x.find("ItemSentence").text }}</div>
-  {% endfor %}
+    <div id="{{ x.html_id }}"><p>
+        <span class="item-title">{{ x.find("ItemTitle").text }}</span>
+        {{ x.find("ItemSentence").text }}
+    </p></div>
+    {% endfor %}
   </div>
 {% endfor %}
-</p>
+
 </div>
