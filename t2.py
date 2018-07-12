@@ -5,13 +5,7 @@ from collections import defaultdict
 
 templateLoader = jinja2.FileSystemLoader(searchpath="./templates/")
 templateEnv = jinja2.Environment(loader=templateLoader)
-TEMPLATE_FILE = "base.html"
-#template = templateEnv.get_template("base.html")
-#outputText = template.render()
 
-target_file = "tokkyohou.xml"
-tree = bs4.BeautifulSoup(open(target_file), "xml")
-refined_tree = defaultdict(list)
 
 def visitPart(root):
     parts = root.findAll("Part")
@@ -25,6 +19,7 @@ def visitPart(root):
     else:
         root.html_id = "root"
         visitChapter(root)
+
 
 def visitChapter(tree):
     for x in tree.findAll("Chapter"):
@@ -40,6 +35,7 @@ def visitChapter(tree):
         x.parent_group = tree
         visitSection(x)
 
+
 def visitSection(tree):
     for x in tree.findAll("Section"):
         refined_tree[tree.html_id].append(x)
@@ -49,6 +45,7 @@ def visitSection(tree):
         x.parent_id = tree.html_id
         x.parent_group = tree
         visitSubsection(x)
+
 
 def visitSubsection(tree):
     for x in tree.findAll("Subsection"):
@@ -60,6 +57,7 @@ def visitSubsection(tree):
         x.parent_group = tree
         visitDivision(x)
 
+
 def visitDivision(tree):
     for x in tree.findAll("Division"):
         refined_tree[tree.html_id].append(x)
@@ -69,19 +67,6 @@ def visitDivision(tree):
         x.parent_id = tree.html_id
         x.parent_group = tree
 
-visitPart(tree.MainProvision)
-
-
-def foo(article):
-    print(article.ArticleCaption.text)
-    print(article.ArticleTitle.text)
-    for p in article.findAll("Paragraph"):
-        print("p{}".format(p["Num"]))
-        for s in p.findAll("Sentence"):
-            s_id = s.get("Num", "0")
-            print("s{} {}".format(s_id, s.text))
-
-#foo(tree.find("Article", Num="556"))
 
 header_template = templateEnv.get_template("m_header.html")
 def render_header(container):
@@ -90,24 +75,8 @@ def render_header(container):
         siblings=refined_tree[container.parent_id],
         children=refined_tree[container.html_id])
 
-buf = []
-#render_header(refined_tree["3"][0])
-
-def render(item):
-    buf.append(render_header(item))
-    children = refined_tree[item.html_id]
-    if children:
-        for x in children:
-            render(x)
-    else:
-        render_articles(item)
-
 
 article_template = templateEnv.get_template("m_article.html")
-
-#target = refined_tree["1"][1]
-#articles = target.findAll("Article")
-
 def render_articles(group):
     articles = group.findAll("Article")
     address = [group]
@@ -137,13 +106,44 @@ def render_articles(group):
         buf.append(article_template.render(article=a, paragraphs=paragraphs, address=address))
 
 
-if 1:
+def render(item):
+    buf.append(render_header(item))
+    children = refined_tree[item.html_id]
+    if children:
+        for x in children:
+            render(x)
+    else:
+        render_articles(item)
+
+
+
+def convert_one(target_file):
+    global refined_tree, buf
+    tree = bs4.BeautifulSoup(open(target_file), "xml")
+    refined_tree = defaultdict(list)
+    visitPart(tree.MainProvision)  # updates refined_tree
+
+    buf = []
     for x in refined_tree["root"]:
-        render(x)
+        render(x)  # updates buf
+
+    law_title = tree.find("LawTitle").text
 
     output_file = target_file.replace("xml", "html")
     base_template = templateEnv.get_template("base.html")
     fo = codecs.open(output_file, "w", encoding="utf-8")
-    fo.write(base_template.render(main="\n".join(buf)))
+    fo.write(base_template.render(
+        law_title=law_title,
+        layer1=refined_tree["root"],
+        main="\n".join(buf)))
     fo.close()
+
+
+convert_one("minpo.xml")
+
+def convert_all():
+    import glob
+    for x in glob.glob("*.xml"):
+        print(x)
+        convert_one(x)
 
