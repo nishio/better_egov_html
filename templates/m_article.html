@@ -4,7 +4,7 @@
 <a href="#c{{ x.html_id }}">{{ x.title }}</a>{{ ", " if not loop.last }}
 {% endfor %}
 </div>
-
+<p>
 {{ article.caption if article.caption }}<br/>
 <a href="#{{ article.html_id }}">{{ article.html_id }}</a> <span class="article-title">{{ article.title }}</span><br/>
 
@@ -21,4 +21,5 @@
   {% endfor %}
   </div>
 {% endfor %}
+</p>
 </div>
