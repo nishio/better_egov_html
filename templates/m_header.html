@@ -1,5 +1,6 @@
 <div class="header">
 <h1 id="c{{ container.html_id }}"><a href="#c{{ container.html_id }}">{{ container.html_id }}</a> {{ container.title }}</h1>
+{% if container.parent.title %}parent: <a href="#c{{ container.parent.html_id }}">{{ container.parent.title }}</a>{% endif %}
 siblings: {% for x in siblings %}<a href="#c{{ x.html_id }}">{{ x.title }}</a>{{ ", " if not loop.last }}{% endfor %}
 {% if children %}
 <br/>
