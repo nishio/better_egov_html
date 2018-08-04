@@ -31,8 +31,18 @@ div.article {
 
 .permalink {
     float: right;
+    user-select: none;
 }
 
 p {
     margin: 0;
+}
+
+.navi-icon {
+    width: 1.5em;
+}
+.copy-button {
+    float: right;
+    width: 1.5em;
+    user-select: none;
 }

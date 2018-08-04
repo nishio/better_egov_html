@@ -1,9 +1,10 @@
 <div class="header">
 <h1 id="c{{ container.html_id }}"><a href="#c{{ container.html_id }}">{{ container.html_id }}</a> {{ container.title }}</h1>
-{% if container.parent.title %}<img src="icon/parent.jpg" width="1em"><a href="#c{{ container.parent.html_id }}">{{ container.parent.title }}</a>{% endif %}
-<ims sec="icon/siblings.jpg" width="1em">{% for x in siblings %}<a href="#c{{ x.html_id }}">{{ x.title }}</a>{{ ", " if not loop.last }}{% endfor %}
+{% if container.parent.title %}
+<img src="icon/parent.jpg"  class="navi-icon"><a href="#c{{ container.parent.html_id }}">{{ container.parent.title }}</a>{% endif %}
+<img src="icon/siblings.jpg" class="navi-icon">{% for x in siblings %}<a href="#c{{ x.html_id }}">{{ x.title }}</a>{{ ", " if not loop.last }}{% endfor %}
 {% if children %}
 <br/>
-<img src="icon/children.jpg" width="1em">{% for x in children %}<a href="#c{{ x.html_id }}">{{ x.title }}</a>{{ ", " if not loop.last }}{% endfor %}
+<img src="icon/children.jpg" class="navi-icon">{% for x in children %}<a href="#c{{ x.html_id }}">{{ x.title }}</a>{{ ", " if not loop.last }}{% endfor %}
 {% endif %}
 </div>
