@@ -2,6 +2,12 @@ import bs4
 import jinja2
 import codecs
 from collections import defaultdict
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--all", action="store_true", dest="convert_all")
+parser.add_argument("--target", action="store", default="chosakukenhou.xml")
+args = parser.parse_args()
 
 templateLoader = jinja2.FileSystemLoader(searchpath="./templates/")
 templateEnv = jinja2.Environment(loader=templateLoader)
@@ -139,7 +145,7 @@ def convert_one(target_file):
     fo.close()
 
 
-convert_one("minpo.xml")
+
 
 def convert_all():
     import glob
@@ -147,3 +153,9 @@ def convert_all():
         print(x)
         convert_one(x)
 
+
+if __name__ == "__main__":
+    if args.convert_all:
+        convert_all()
+    else:
+        convert_one(args.target)
